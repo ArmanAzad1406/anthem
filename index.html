@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pakistan & Bangladesh Anthems</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e6f2ff, #ffe6e6);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 30px;
+      gap: 50px;
+      min-height: 100vh;
+    }
+    .anthem-container {
+      background: rgba(255,255,255,0.9);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 350px;
+      text-align: center;
+    }
+    .flag {
+      width: 100px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    h2 {
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .lyrics {
+      max-height: 300px;
+      overflow-y: auto;
+      text-align: left;
+      background: #f7f7f7;
+      padding: 10px;
+      border-radius: 6px;
+      line-height: 1.5;
+    }
+    .highlight {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <!-- Pakistan Anthem (Left) -->
+  <div class="anthem-container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/32/Flag_of_Pakistan.svg" class="flag" alt="Pakistan Flag">
+    <h2>Pakistan</h2>
+    <button onclick="playPause('pk')">Play/Pause</button>
+    <div id="pk-lyrics" class="lyrics">
+      <p>Pāk sarzamīn shād bād</p>
+      <p>Kishwar-e haseen shād bād</p>
+      <p>Tū nishān-e azm-e ālī-shān</p>
+      <p>Arz-e Pākistān</p>
+      <p>...</p> Pak sarzameen shad bad
+
+Kishwar-e-Haseen shad bad
+
+Tou Nishaan-e-Azm-e-aali shan Arz-e-Pakistan
+
+Markaz-e-yaqeen Shad bad
+
+Pak sarzameen ka nizaam Qouwat-e-Akhouwat-e-Awam
+
+Qaum mulk saltanat
+
+Painda tabinda bad Shad bad Manzil-e-murad
+
+Parcham-e-Sitara-o-Hilal
+
+Rahbar-e-Tarakkeey-o-Kamal
+
+Tarjuman-e-mazee-shaan-e-Hal Jan-e-Istaqbal
+
+Saaya-e-Khuda-e-zuljalal
+    </div>
+    <audio id="pk-audio" src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Pakistan_national_anthem.ogg"></audio>
+  </div>
+
+  <!-- Bangladesh Anthem (Right) -->
+  <div class="anthem-container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Flag_of_Bangladesh.svg" class="flag" alt="Bangladesh Flag">
+    <h2>Bangladesh</h2>
+    <button onclick="playPause('bd')">Play/Pause</button>
+    <div id="bd-lyrics" class="lyrics">
+      <p>Amar Shonar Bangla, Ami Tomay Bhalobashi</p>
+      <p>Chirodin Tomar Akash, Tomar Batash, Amar Prane Bajay Bashi</p>
+      <p>O Ma, O Ma, O Ma!</p>
+      <p>...</p> Amar sonar Bangla,
+
+Ami tomay bhalobashi,
+
+Ciradin tomar akas, tomar batas, amar prane
+
+Oma amar prane, bajay basi.
+
+Sonar Bangla, Ami tomay bhalobasi.
+
+O ma, Fagune tor amer bane ghrane pagal kare, mari hay, hay re
+
+O ma, Fagune tor amer bane ghrane pagal kare,
+
+O ma, aghrane tor bhara ksete ki dekhechi ami ki dekhechi madhur hasi
+
+Sonar Bangla ami tomay bhalo basi, ki sobha, ki chaya go ki sneha,
+
+ki maya go ki acal bichayecha
+
+bater mule, nadir kule kule.
+
+Ma, tor mukher bani amar kane lage suhar mato,
+
+mari hay hay re ma,
+
+tor nadankhani malin hale, o ma, ami nayanjale bhasi.
+    <audio id="bd-audio" src="https://upload.wikimedia.org/wikipedia/commons/3/33/Bangladesh_national_anthem.ogg"></audio>
+  </div>
+
+  <script>
+    let currentAudio = null;
+    let currentLyrics = null;
+    let lyricIndex = 0;
+    let lyricInterval = null;
+
+    const bdLyrics = document.querySelectorAll('#bd-lyrics p');
+    const pkLyrics = document.querySelectorAll('#pk-lyrics p');
+
+    function playPause(country) {
+      let audio = document.getElementById(country + '-audio');
+      let lyrics = country === 'bd' ? bdLyrics : pkLyrics;
+
+      if(currentAudio && currentAudio !== audio){
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        clearInterval(lyricInterval);
+        if(currentLyrics){
+          currentLyrics.forEach(p => p.classList.remove('highlight'));
+        }
+      }
+
+      currentAudio = audio;
+      currentLyrics = lyrics;
+
+      if(audio.paused){
+        audio.play();
+        lyricIndex = 0;
+        highlightLyrics();
+        lyricInterval = setInterval(highlightLyrics, 3000);
+      } else {
+        audio.pause();
+        clearInterval(lyricInterval);
+      }
+    }
+
+    function highlightLyrics() {
+      if(!currentLyrics) return;
+      currentLyrics.forEach(p => p.classList.remove('highlight'));
+      if(lyricIndex < currentLyrics.length){
+        currentLyrics[lyricIndex].classList.add('highlight');
+        lyricIndex++;
+      } else {
+        clearInterval(lyricInterval);
+      }
+    }
+  </script>
+</body>
+</html>
